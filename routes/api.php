@@ -17,3 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:sanctum')->group(function (){
+Route::get('vet/list' ,[\App\Http\Controllers\VetController::class,'VetListApi']);
+Route::get('vet/detail/{id}' ,[\App\Http\Controllers\VetController::class,'VetDetailApi']);
+Route::post('vet/create' ,[\App\Http\Controllers\VetController::class,'VetCreate']);
+    });
+Route::post('token/create',[\App\Http\Controllers\UserController::class,'createToken']);
+
+Route::get('pet/list' , [\App\Http\Controllers\PetController::class,'petListApi']);
+Route::get('pet/list/{id}' , [\App\Http\Controllers\PetController::class,'petDetailListApi']);

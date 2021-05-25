@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Appointment extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
-        'pet_id','vet_id','appointment_date','morning','afternoon','evening'
+        'pet_id','user_id','vet_id','appointment_date','morning','afternoon','evening'
     ];
 
     public function vet()
@@ -21,5 +23,9 @@ class Appointment extends Model
     public function pet()
     {
         return $this->belongsTo(Pet::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

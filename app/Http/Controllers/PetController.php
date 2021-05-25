@@ -6,40 +6,76 @@ use App\Models\CategoryPet;
 use App\Models\Pet;
 use App\Models\User;
 use App\Models\Vet;
+use App\Http\Resources\petresource;
+
+use http\Env\Response;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Resource_;
+
 
 class PetController extends Controller
 {
     public function index(Request $request)
     {
+        //policy
+
+        $result = Gate::inspect('show' , $request->user());
+//        dd($result);
+        if ($result->allowed()){
+            return redirect()->route('vet.show', ['id' => $request->user()]);
+        }
+
+
         $deleted_pet_id = session('deleted_pet', false);
         $categories = CategoryPet::all();
         $vets = Vet::all();
-
         $pets = Pet::where('user_id', $request->user()->id)->get();
         return view('user.index',
             ['pets' => $pets, 'categories' => $categories, 'vets' => $vets, 'deleted_pet' => $deleted_pet_id]);
+
+
     }
 
-    public function create(Request $request)
+
+
+    public function create(Request $request )
     {
-        $validated = $request->validate([
 
-            'age' => 'required|Integer',
-        ]);
-
-
-        $pet = new Pet();
-        $pet->name = $request->get('name');
-        $pet->age = $request->get('age');
-        $pet->user_id = $request->user()->id;
-        $pet->category_pets_id = $request->category_pets_id;
-        $pet->save();
+        //policy
+        //dd(Gate::inspect('show' , $request->user()));
+        if (Gate::inspect('show', $request->user())) //dd($result);
+        {
 
 
-        return back();
-    }
+            $validated = $request->validate([
+
+                'age' => 'required|Integer',
+            ]);
+
+            $pet_image = null;
+            if ($request->hasFile('pet_img') && $request->file('pet_img')->isvalid()) {
+                $pet_image = $request->pet_img->store('image');
+
+            }
+
+
+            $pet = new Pet();
+            $pet->name = $request->get('name');
+            $pet->age = $request->get('age');
+            $pet->user_id = $request->user()->id;
+            $pet->category_pets_id = $request->category_pets_id;
+            $pet->image = $pet_image;
+            $pet->save();
+
+
+            return back();
+
+    }else{
+abort(403);
+}
+}
 
     public function edit($userId, $petId)
     {
@@ -93,5 +129,25 @@ class PetController extends Controller
         Pet::where('id', $id)->withTrashed()->restore();
         return redirect()->route('pet.index');
 
+    }
+
+
+
+    //api ----->>>>
+
+    public function petListApi()
+    {
+        $pets = Pet::all();
+        return petresource::collection($pets);
+    }
+
+    public function petDetailListApi(Request $request)
+    {
+        $pet = Pet::find($request->id);
+        if (isset($pet)){
+        return new petresource($pet);
+    }else{
+            return response('no found this id',400);
+        }
     }
 }

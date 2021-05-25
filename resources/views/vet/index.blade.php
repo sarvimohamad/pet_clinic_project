@@ -4,37 +4,57 @@
     <section>
         <div class="container">
             <div class="row align-items-start">
-{{--                @foreach($list as $vet)--}}
-{{--                    <h1>{{$vet->id}}</h1>--}}
-{{--                @endforeach--}}
-        <form method="post" action="{{route('vet.store')}}">
-            @csrf
+                <div>
+                <h1>vet list</h1>
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>speciality</th>
+                        <th>morning</th>
+                        <th>afternoon</th>
+                        <th>evening</th>
 
 
-            <div>
-                <label class="form-label" for="exampleCheck1">speciality</label>
-                <input type="text" class="form-control" id="exampleCheck1" name="speciality">
-            </div>
-            <br>
-            <div>
-                <label class="form-label" for="exampleCheck1">morning</label>
-                <input type="checkbox" class="form-check-label" id="exampleCheck1" name="morning">
-            </div>
-            <div>
-                <label class="form-label" for="exampleCheck1">afternoon</label>
-                <input type="checkbox" class="form-check-label" id="exampleCheck1" name="afternoon">
-            </div>
-            <div>
-                <label class="form-label" for="exampleCheck1">evening</label>
-                <input type="checkbox" class="form-check-label" id="exampleCheck1" name="evening">
-            </div>
+                    </tr>
+                    </thead>
 
-            <br>
+                    <tbody>
+                    @foreach($list as $vet)
+                        <tr>
+                            <th><a href="{{route('appointment.index',['vet_id' => $vet->id])}}">{{$vet->user->name}}</a></th>
+                            <th>{{$vet->speciality}}</th>
+                            <th class="text-success text-center">@if($vet->morning) █ @endif</th>
+                            <th class="text-success text-center">@if($vet->afternoon) █ @endif</th>
+                            <th class="text-success text-center">@if($vet->evening) █ @endif</th>
+                        </tr>
+                    @endforeach
+                    {{--                                    @endcan--}}
 
-            <input type="submit" class="btn-success" value="submit">
-        </form>
+                    </tbody>
+                </table>
+                </div>
+                <hr>
+
+
+
+                @if (Session::has('message'))
+                    <div class="alert alert-danger">{{ Session::get('message') }}</div>
+                @endif
+
+
+
+        @can('checkIsAdmin',App\Models\User::class)
+
+            <button class="btn-link btn-dark " id="v-pills-profile-tab" data-bs-toggle="pill"
+                    data-bs-target="#v-pills-profile" type="button" role="tab"
+                    aria-controls="v-pills-profile" aria-selected="true">
+                <a href="{{route('vet.create')}}">Create Vets</a>
+            </button>
+        @endcan
             </div>
-            </div>
+        </div>
 
     </section>
 @endsection

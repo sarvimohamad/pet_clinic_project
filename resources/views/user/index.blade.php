@@ -7,6 +7,9 @@
                 <div class="col">
                     <div class="row align-items-start">
                         <div class="col-6">
+
+{{--                            @can('show',App\Models\User::class)--}}
+
                             <h1>pet list</h1>
 
                             @if($deleted_pet)
@@ -37,14 +40,7 @@
                                         <td>
                                             <a href="{{route('pet.destroy' ,['id'=>$pet->id])}}">delete</a>/
                                             <a href="{{route('pet.edit' ,['userId'=>$pet->user_id ,'petId'=>$pet->id])}}">update</a>
-                                            {{--                                <span>--}}
-                                            {{--                                <form method="get" action="{{route('pet.destroy' ,['id'=>$pet->id])}}">--}}
-                                            {{--                                    <button class="btn-outline-danger"  onclick="return confirm('are you sure delete?')"> DeLete </button>--}}
-                                            {{--                                </form>--}}
-                                            {{--                                <form method="get" action="{{route('pet.edit' ,['id'=>$pet->id])}}">--}}
-                                            {{--                                    <button class="btn-outline-success">upDate</button>--}}
-                                            {{--                                </form>--}}
-                                            {{--                                    </span>--}}
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -59,7 +55,7 @@
                     <h3>Add your PET</h3>
                     <div class="container">
                         <div class="row align-items-start">
-                            <form method="post" action="{{route('pet.create')}}">
+                            <form method="post" action="{{route('pet.create')}}" enctype="multipart/form-data">
                                 @csrf
                                 <div>
                                     <label>type pet</label><br>
@@ -70,6 +66,7 @@
                                             <option value="{{$category->id}}">{{$category->name}}</option>
                                         @endforeach
                                     </select>
+                                    <input type="file" name="pet_img">
 
 
                                 </div>
@@ -86,6 +83,7 @@
 
                                 <input type="submit" class="btn-success" value="submit">
                             </form>
+{{--                            @endcan--}}
 
 
                         </div>
@@ -118,7 +116,7 @@
                                         href="{{route('vet.index')}}">Vets</a></button>
                                 <button class="btn btn-outline-primary" id="v-pills-messages-tab" data-bs-toggle="pill"
                                         data-bs-target="#v-pills-messages" type="button" role="tab"
-                                        aria-controls="v-pills-messages" aria-selected="true">appointments
+                                        aria-controls="v-pills-messages" aria-selected="true"><a href="{{route('appointment.list')}}">appointment</a>
                                 </button>
                                 <button class="btn btn-outline-primary" id="v-pills-settings-tab" data-bs-toggle="pill"
                                         data-bs-target="#v-pills-settings" type="button" role="tab"
@@ -127,33 +125,6 @@
                                 <br>
                                 <hr>
 
-                                <h1>vet list</h1>
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th>name</th>
-                                        <th>speciality</th>
-                                        <th>morning</th>
-                                        <th>afternoon</th>
-                                        <th>evening</th>
-
-
-                                    </tr>
-                                    </thead>
-
-                                    <tbody>
-                                    @foreach($vets as $vet)
-                                    <tr>
-                                        <th><a href="{{route('appointment.index',['vet_id' => $vet->id])}}">{{$vet->user->name}}</a></th>
-                                        <th>{{$vet->speciality}}</th>
-                                        <th class="text-success text-center">@if($vet->morning) █ @endif</th>
-                                        <th>@if($vet->afternoon) █ @endif</th>
-                                        <th>@if($vet->evening) █ @endif</th>
-                                    </tr>
-                                    @endforeach
-
-                                    </tbody>
-                                </table>
 
 
                             </div>

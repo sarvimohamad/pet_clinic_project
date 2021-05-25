@@ -30,10 +30,15 @@ Route::get('/', function () {
 
 
     Route::get('vets' , [\App\Http\Controllers\VetController::class, 'index'])->name('vet.index');
+    Route::get('vets/{id}' , [\App\Http\Controllers\VetController::class, 'show'])->name('vet.show');
+    Route::get('vet/create' , [\App\Http\Controllers\VetController::class, 'create'])->name('vet.create')->middleware('can:checkIsAdmin,App\Models\User');
     Route::post('vets/store' , [\App\Http\Controllers\VetController::class, 'store'])->name('vet.store');
     });
 
-    Route::get('appointment/{vet_id}' , [\App\Http\Controllers\AppointmentController::class,'index'])->name('appointment.index');
+    Route::get('appointment' , [\App\Http\Controllers\AppointmentController::class,'list'])->name('appointment.list');
+    Route::get('appointment/{id}' , [\App\Http\Controllers\AppointmentController::class,'destroy'])->name('appointment.destroy');
+    Route::get('appointment/{appointment_id}/undo' , [\App\Http\Controllers\AppointmentController::class,'undo'])->name('appointment.undo');
+    Route::get('appointment/vet/{vet_id}' , [\App\Http\Controllers\AppointmentController::class,'index'])->name('appointment.index');
     Route::post('appointment/{vet_id}/book' , [\App\Http\Controllers\AppointmentController::class,'book'])->name('appointment.book');
 
 Auth::routes();

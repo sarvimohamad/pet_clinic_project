@@ -16,11 +16,11 @@ class userTableSeeder extends Seeder
     public function run()
     {
        DB::table('users')->insert([
-          'first_name'=>'mohamad',
-           'last_name'=>'sarvi',
+          'name'=>'mohamad',
           'email'=>'mohamad.sarvi.1515@gmail.com',
           'password'=>'1234',
            'is_admin'=>'1',
+           'is_active'=>'1',
        ]);
     }
 }
